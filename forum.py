@@ -8,8 +8,9 @@ import os
 import json
 import hashlib
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#from imp import reload
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 urls = (
   '/', 'Index',
@@ -141,7 +142,7 @@ class Register:
         try:
             i = web.input()
             user_id = model.User().new(i.email, i.username, i.password)
-        except Exception, e:
+        except e:
             return titled_render().failed('邮箱或帐号已存在，请重新<a href="/register">注册</a>')
         else:
             if user_id:
@@ -261,8 +262,8 @@ class Password:
                       ''' % (status['username'], temp_password)
             try:
                 web.sendmail(settings.SITE_SMTP_USERNAME, i.email, subject, message)
-            except Exception, e: # 发送失败
-                print e
+            except e: # 发送失败
+                print(e)
             else: # 发送成功
                 if user.update(user_id, password=temp_password): # 设置临时密码
                     return json.dumps({'result': True})
